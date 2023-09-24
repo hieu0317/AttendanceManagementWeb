@@ -1,0 +1,137 @@
+﻿@addTagHelper *,Microsoft.AspNetCore.Mvc.TagHelpers
+@using PRN211_Asssignment.Models
+@model List<Attendance>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>JSP Page</title>
+    <link rel="stylesheet" type="text/css" href="~/css/TakeAttendance.css">
+</head>
+<body>
+    <div>
+        <header>
+            <img src="~/img/fpt-university.jpg">
+            <img src="~/img/download-application-button-apple-app-store-free-vector.jpg">
+            <img src="~/img/download.jpg">
+            <p>FAP mobile app (myFAP) is ready at</p>
+        </header>
+        <div class="header-bar">
+            <a class="Home" asp-controller="Instructor" asp-action="Home">Home</a>
+            <p>Take Attendance</p>
+            <div class="dropdown">
+                <img id="dropbtn" src="~/img/account.png">
+                <div class="dropdown-content">
+                    <a>@ViewBag.InstructorRollNumber</a>
+                    <a>@ViewBag.InstructorName</a>
+                    <a asp-controller="Authentication" asp-action="LogOut">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <h2>Take Attend</h2>
+    <script>
+        function handleAbsentAllChange() {
+            var absentAllRadio = document.getElementById('absentAll');
+            var absentRadios = document.getElementsByClassName("absent");
+
+            if (absentAllRadio.checked) {
+                for (var i = 0; i < absentRadios.length; i++) {
+                    absentRadios[i].checked = true;
+                }
+            } else {
+                for (var i = 0; i < absentRadios.length; i++) {
+                    absentRadios[i].checked = false;
+                }
+            }
+        }
+        function handlePresentAllChange() {
+            var absentAllRadio = document.getElementById('presentAll');
+            var absentRadios = document.getElementsByClassName("present");
+
+            if (absentAllRadio.checked) {
+                for (var i = 0; i < absentRadios.length; i++) {
+                    absentRadios[i].checked = true;
+                }
+            } else {
+                for (var i = 0; i < absentRadios.length; i++) {
+                    absentRadios[i].checked = false;
+                }
+            }
+        }
+
+        function save(){
+            alert('Save thành công');
+        }
+    </script>
+    <form asp-controller="Instructor" asp-action="TakeAttend" method="post">
+        <table border="1px">
+            <tr>
+                <th>Seq</th>
+                <th>Student Id</th>
+                <th>Name</th>
+                <th>Present/Absent 
+                    <input type="radio" name="all" id="presentAll" onchange="handlePresentAllChange()" /> present
+                    <input type="radio" name="all" id="absentAll" onchange="handleAbsentAllChange()" /> absent
+                </th>
+                <th>Description</th>
+            </tr>
+            @{
+                int j = 0;
+            }
+            @for(int i = 0;i < Model.Count; i++){
+                <tr>
+                    @{
+                        j++;
+                    }
+                    <td>@j</td>
+                    <td>@Model[i].Student.StudentRollNumber</td>
+                    <td>@Model[i].Student.LastName @Model[i].Student.FirstName</td>
+                    <td>
+                        @if(Model[i].Status == false){
+                        <input type="radio" checked="checked" class="absent"
+                                   asp-for="@Model[i].Status" value="false" /> <span>Absent</span>
+                        }
+                        else{
+                        <input type="radio"
+                           asp-for="@Model[i].Status" class="absent" value="false" /> <span>Absent</span>
+                        }
+                        @if (Model[i].Status == true)
+                        {
+                            <input type="radio"
+                                   checked="checked"
+                           asp-for="@Model[i].Status" class="present" value="true" /> <span>Present</span>
+                        }
+                        else{
+                            <input type="radio"
+                           asp-for="@Model[i].Status" class="present" value="true" /> <span>Present</span>
+                            
+                        }                 
+                        </td>
+                    <td>
+                        <input type="hidden" asp-for="@Model[i].Sid" value="@Model[i].Sid" />
+                        <input type="hidden" asp-for="@Model[i].Aid" value="@Model[i].Aid" />
+                        <input type="text" asp-for="@Model[i].Description" value="@Model[i].Description" />
+                    </td>
+                </tr>
+            }
+        </table>
+        <div class="Save">
+            <input type="hidden" name="id" value="@ViewBag.sessionID" />
+            @if(ViewBag.isAdd == true)
+            {
+                <input type="submit" value="Add" onclick="save()" />
+            }
+            else
+            {
+                <input type="submit" value="Save" onclick="save()" />
+            }
+            
+        </div>
+    </form>
+    <div class="rooter">
+        <p>
+            Mọi góp ý, thắc mắc xin liên hệ: Phòng dịch vụ sinh viên: Email: <span>dichvusinhvien@fe.edu.vn.</span> Điện
+            thoại: <span class="PhoneNumber">(024)7308.13.13</span>
+        </p>
+        <p> © Powered by <span>University</span> | <span>CMS</span> | <span>library</span> | <span>books24x7</span></p>
+    </div>
+</body>

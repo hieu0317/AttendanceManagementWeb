@@ -1,0 +1,32 @@
+﻿@addTagHelper *,Microsoft.AspNetCore.Mvc.TagHelpers
+@using PRN211_Asssignment.Models
+@model User
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link rel="stylesheet" href="~/css/login.css">
+</head>
+<body>
+    <div class="login-container">
+        <h2>Login</h2>
+        <form asp-controller="Authentication" asp-action="Login" method="post">
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" id="username" asp-for="Username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" asp-for="Password" required>
+            </div>
+            @if(ViewBag.Err != null)
+            {
+                <p style="color:red">@ViewBag.Err</p>
+            }
+            <select name="campus" id="">
+                <option value="">Hòa Lạc</option>
+            </select> </br>
+            <button type="submit">Login</button>
+        </form>
+    </div>
+    <img src="~/img/trung-dung-ki-tuc-xa-sinh-vien-_dh_fpt.jpg" alt="Background Image">
+</body>

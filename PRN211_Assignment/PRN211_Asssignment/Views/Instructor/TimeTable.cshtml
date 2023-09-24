@@ -1,0 +1,117 @@
+﻿@addTagHelper *,Microsoft.AspNetCore.Mvc.TagHelpers
+@using PRN211_Asssignment.Models
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>JSP Page</title>
+    <link rel="stylesheet" href="~/css/WeeklyTimetable.css">
+</head>
+<body>
+    <div>
+        <header>
+            <img src="~/img/fpt-university.jpg">
+            <img src="~/img/download-application-button-apple-app-store-free-vector.jpg">
+            <img src="~/img/download.jpg">
+            <p>FAP mobile app (myFAP) is ready at</p>
+        </header>
+        <div class="header-bar">
+            <a class="Home" asp-controller="Instructor" asp-action="Home">Home</a>
+            <p>View Schedule</p>
+            <div class="dropdown">
+                <img id="dropbtn" src="~/img/account.png">
+                <div class="dropdown-content">
+                    <a>@ViewBag.InstructorRollNumber</a>
+                    <a>@ViewBag.InstructorName</a>
+                    <a asp-controller="Authentication" asp-action="LogOut">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <h1>Activities for ....</h1>
+
+    <script>
+        function change() {
+            //Kích hoạt submit form
+            document.getElementById("fr").submit();
+        }
+    </script>
+    <table border="1">
+        <tr>
+            <th>
+                Year:2023
+                <form id="fr" asp-controller="Instructor" asp-action="TimeTable">
+                    <select class="selectWeek" name="weekNumber" onchange="change()">
+                        @{
+                            int numberOfWeek = 1;
+                        }
+                        @foreach (string weekDates in ViewBag.weekDates)
+                        {
+                            @if (weekDates.Equals(ViewBag.selectedWeek))
+                            {
+                                <option selected value="@numberOfWeek">@weekDates</option>
+                            }
+                            else
+                            {
+                                <option value="@numberOfWeek">@weekDates</option>
+                            }
+                            numberOfWeek++;
+                        }
+                    </select>
+                </form>
+            </th>
+            @foreach (string date in ViewBag.datesInWeek)
+            {
+                <th>@date</th>
+            }
+        </tr>
+        @foreach (TimeSlot t in ViewBag.timeSlot)
+        {
+            <tr>
+                <td>
+                    Slot: @t.TimeSlotId
+                    @t.TimeFrom - @t.TimeTo
+                </td>
+
+                @foreach (string d in ViewBag.datesInWeek)
+                {
+                    <td>
+                        @foreach (var item in ViewBag.data)
+                        {
+                                string date = item.Date.ToString("dd/MM/yyyy");
+                            if (date == d && item.TimeSlotID == t.TimeSlotId && ViewBag.instructor.InstructorId == item.InstructorID)
+                                {
+                                    @item.GName
+                                    <span style="color:black"> - </span>
+                                    @item.Code
+                                    <br />
+                                    @item.RName
+                                <br/>
+
+                                DateTime now = DateTime.ParseExact(ViewBag.currentDate, "dd/MM/yyyy", null);
+                                    @if(item.Date < now )
+                                    {
+                                    <p>(Not yet)</p>
+                                }else if(item.sesStatus == true)
+                                {
+                                    <p>(Attended)</p>
+                                }
+                                else{
+                                        <a asp-controller="Instructor" asp-action="TakeAttend" asp-route-id="@item.SessionID">Take Attend</a>
+                                    }
+                                }
+                            
+                        }
+                    </td>
+                }
+            </tr>
+        }
+
+    </table>
+    <div class="rooter">
+        <p>
+            Mọi góp ý, thắc mắc xin liên hệ: Phòng dịch vụ sinh viên: Email: <span>dichvusinhvien@fe.edu.vn.</span> Điện
+            thoại: <span class="PhoneNumber">(024)7308.13.13</span>
+        </p>
+        <p> © Powered by <span>University</span> | <span>CMS</span> | <span>library</span> | <span>books24x7</span></p>
+    </div>
+
+</body>

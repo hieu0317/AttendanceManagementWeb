@@ -1,0 +1,148 @@
+﻿@addTagHelper *,Microsoft.AspNetCore.Mvc.TagHelpers
+@using PRN211_Asssignment.Models
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>JSP Page</title>
+    <link rel="stylesheet" href="~/css/WeeklyTimetable.css">
+</head>
+<body>
+    <div>
+        <header>
+            <img src="~/img/fpt-university.jpg">
+            <img src="~/img/download-application-button-apple-app-store-free-vector.jpg">
+            <img src="~/img/download.jpg">
+            <p>FAP mobile app (myFAP) is ready at</p>
+        </header>
+        <div class="header-bar">
+            <a class="Home" asp-controller="Instructor" asp-action="Home">Home</a>
+            <p>View Schedule</p>
+            <div class="dropdown">
+                <img id="dropbtn" src="~/img/account.png">
+                <div class="dropdown-content">
+                    <a>@ViewBag.InstructorRollNumber</a>
+                    <a>@ViewBag.InstructorName</a>
+                    <a asp-controller="Authentication" asp-action="LogOut">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <h1>Group Report</h1>
+    <form id="fr" asp-controller="Instructor" asp-action="GroupReport">
+        <select style="margin-left:110px; margin-bottom:5px;" name="selectedGroup" onchange="change()">
+            @foreach (var item in ViewBag.groups)
+            {
+                <option value="0">Select Group</option>
+                @if (item.groupID.Equals(ViewBag.selectedGroup))
+                {
+                    <option selected value="@item.groupID">
+                        @item.groupName
+                    </option>
+                }
+                else
+                {
+                    <option value="@item.groupID">@item.groupName</option>
+                }
+            }
+        </select>
+    </form>
+    <script>
+        function change() {
+            document.getElementById("fr").submit();
+        }
+    </script>
+    <table>
+        <tr>
+            <th>
+                No
+            </th>
+            <th>
+                Group
+            </th>
+            <th>
+                Student Roll Number
+            </th>
+            <th>
+                Student Name
+            </th>
+            @{
+                int i = 1;
+            }
+            @foreach(var item in ViewBag.sessions)
+            {
+                <th>Slot @i</th>
+                i++;
+            }
+            <th>
+                Percent Absent
+            </th>
+
+
+        </tr>
+        @{
+            int j = 0;
+        }
+         @foreach(Student student in ViewBag.students){
+            @foreach (Group group in student.Groups)
+            {
+                <tr>
+                    @{
+                        j++;
+                        double p = 0;
+                    }
+                    <td>
+                        @i
+                    </td>
+                    <td>
+                        @group.Gname
+                    </td>
+                    <td>
+                        @student.StudentRollNumber
+                    </td>
+                    <td>
+                        @student.LastName @student.FirstName
+                    </td>
+                    @foreach(Attendance a in ViewBag.attendances){
+                        if (student.StudentId == a.Sid && group.GroupId == a.Ses.GroupId)
+                        {
+                            <td>
+                                @if(a.Status == true)
+                                {
+                                    <span style="color:green">Attended</span>
+                                }else if (a.Status == false)
+                                {
+                                    <span style="color:red">Absent</span>
+                                }
+                                else
+                                {
+                                    <span style="color:black">-</span>
+                                }
+
+                            </td>
+                            if(a.Status == false)
+                            {
+                                p += 1;
+                            }
+                        }
+                    }
+                    @{
+                        int size = (i - 1);
+                        
+                        int percent = (int)(p / size * 100);
+                    }
+                    <td>
+                        @percent%
+                    </td>
+                </tr>
+            }
+        }
+    </table>
+    <div class="rooter">
+        <p>
+            Mọi góp ý, thắc mắc xin liên hệ: Phòng dịch vụ sinh viên: Email: <span>dichvusinhvien@fe.edu.vn.</span> Điện
+            thoại: <span class="PhoneNumber">(024)7308.13.13</span>
+        </p>
+        <p> © Powered by <span>University</span> | <span>CMS</span> | <span>library</span> | <span>books24x7</span></p>
+    </div>
+
+</body>

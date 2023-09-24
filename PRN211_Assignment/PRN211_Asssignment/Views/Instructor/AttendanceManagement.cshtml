@@ -1,0 +1,67 @@
+﻿@addTagHelper *,Microsoft.AspNetCore.Mvc.TagHelpers
+@using PRN211_Asssignment.Models
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>JSP Page</title>
+    <link rel="stylesheet" href="~/css/WeeklyTimetable.css">
+</head>
+<body>
+    <div>
+        <header>
+            <img src="~/img/fpt-university.jpg">
+            <img src="~/img/download-application-button-apple-app-store-free-vector.jpg">
+            <img src="~/img/download.jpg">
+            <p>FAP mobile app (myFAP) is ready at</p>
+        </header>
+        <div class="header-bar">
+            <a class="Home" asp-controller="Instructor" asp-action="Home">Home</a>
+            <p>View Schedule</p>
+            <div class="dropdown">
+                <img id="dropbtn" src="~/img/account.png">
+                <div class="dropdown-content">
+                    <a>@ViewBag.InstructorRollNumber</a>
+                    <a>@ViewBag.InstructorName</a>
+                    <a asp-controller="Authentication" asp-action="LogOut">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <h1>Activities for Attendance Management</h1>
+
+    
+    <table border="1">
+        <tr>
+            <th></th>
+            <th>Group Name</th>
+            <th>Date</th>
+            <th>Room Name</th>
+            <th></th>
+            <th></th>
+        </tr>
+        @{
+            int i = 0;
+        }
+        @foreach(Session ses in ViewBag.session)
+        {
+            string date = ses.Date.ToString("dd/MM/yyyy");
+            i++;
+            <tr>
+                <td>@i</td>
+                <td>@ses.Group.Gname</td>         
+                <td>@date</td>
+                <td>@ses.Room.Rname</td>
+                <td><a asp-controller="Instructor" asp-action="TakeAttend" asp-route-id="@ses.SessionId">Edit</a></td>
+                <td><a asp-controller="Instructor" asp-action="ViewAttendances" asp-route-id="@ses.SessionId">View</a></td>
+            </tr>
+        }
+
+    </table>
+    <div class="rooter">
+        <p>
+            Mọi góp ý, thắc mắc xin liên hệ: Phòng dịch vụ sinh viên: Email: <span>dichvusinhvien@fe.edu.vn.</span> Điện
+            thoại: <span class="PhoneNumber">(024)7308.13.13</span>
+        </p>
+        <p> © Powered by <span>University</span> | <span>CMS</span> | <span>library</span> | <span>books24x7</span></p>
+    </div>
+
+</body>
